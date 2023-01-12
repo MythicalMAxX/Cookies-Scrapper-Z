@@ -82,7 +82,7 @@ with open("sample.csv","w",newline="") as file:
     writer.writerow(["Website URL", "Cookie Names", "Purpose", "Description", "Cookie URL"])
     writer.writerow([" ", " ", " ", " ", " "])
     for i in range(len(cookie_names1)):
-        writer.writerow([url1,cookie_names1[i],purpose1,de1[i],urls1])
+        writer.writerow([url1,cookie_names1[i],purpose1,de1[i],urls1[i]])
 
     for i in range(len(cookie_names2)):
-        writer.writerow([url2,cookie_names2[i],purpose2,de2[i],urls2])
+        writer.writerow([url2,cookie_names2[i],purpose2,de2[i],urls2[i]])
