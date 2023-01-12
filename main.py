@@ -74,9 +74,6 @@ purpose2 = "Unknown"
 de1 = assignment_task(urls1)
 de2 = assignment_task(urls2)
 
-print(de1)
-print(de2)
-
 with open("sample.csv","w",newline="") as file:
     writer = csv.writer(file)
     writer.writerow(["Website URL", "Cookie Names", "Purpose", "Description", "Cookie URL"])
