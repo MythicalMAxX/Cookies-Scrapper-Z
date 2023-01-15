@@ -4,6 +4,15 @@ from collections import OrderedDict
 import re
 import csv
 
+Domains = {"Akamai":"https://www.akamai.com/",
+        "Kissmetrics analytics service":"https://www.kissmetrics.io/",
+        "Google Analytics service":"https://www.google.com/",
+        "Google Website Optimizer":"https://www.google.com/",
+        "Google Universal Analytics":"https://www.google.com/",
+        "CloudFlare":"https://www.cloudflare.com/",
+        "OneTrust":"https://www.onetrust.com/",
+        "Quantcast":"https://www.quantcast.com/"}
+
 def get_hostname(description):
     service_providers = ["Quantcast", "Google Analytics service", "Google Website Optimizer",
                          "Google Universal Analytics",
@@ -55,10 +64,15 @@ def create_entry(dict, url):
     about_cookies = get_description(cookie_url)
     host_name = get_hostname(about_cookies)
 
-    writer.writerow([url, dict["Cookiename"],host_name, dict["Purpose"], about_cookies, cookie_url,dict["Is Secure"],dict["Is HTTP Only"],dict["Path"]])
+    try:
+        domain_name = Domains[host_name]
+    except:
+        domain_name = "Unknown"
+
+    writer.writerow([url, dict["Cookiename"],domain_name,host_name, dict["Purpose"], about_cookies, cookie_url,dict["Is Secure"],dict["Is HTTP Only"],dict["Path"]])
     existing_cookies.append(dict["Cookiename"])
 
-    My_dictionary = {"Url":url,"Cookie Name":dict["Cookiename"],"Host Name":host_name,"Purpose":dict["Purpose"],"Description":about_cookies,"Cookie URL": cookie_url,"Is Secure":dict["Is Secure"],"Is HTTP Only":dict["Is HTTP Only"],"Path":dict["Path"]}
+    My_dictionary = {"Url":url,"Cookie Name":dict["Cookiename"],"Domain":domain_name,"Host Name":host_name,"Purpose":dict["Purpose"],"Description":about_cookies,"Cookie URL": cookie_url,"Is Secure":dict["Is Secure"],"Is HTTP Only":dict["Is HTTP Only"],"Path":dict["Path"]}
     raw_output.append((My_dictionary))
 
 def req(url):
@@ -108,7 +122,7 @@ data2 = req(url2)
 
 with open("sample.csv", "w", newline="") as file:
     writer = csv.writer(file)
-    writer.writerow(["Website URL", "Cookie Names","Host", "Purpose", "Description", "Cookie URL","Is Secure","Is HTTP only?","Path"])
+    writer.writerow(["Website URL", "Cookie Names","Domain","Host", "Purpose", "Description", "Cookie URL","Is Secure","Is HTTP only?","Path"])
 
     for entries in data1:
         entries = list(entries.split(","))
