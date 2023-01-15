@@ -43,8 +43,10 @@ def get_description(cookie_urls):
     return desc
 
 raw_output = []
-
+existing_cookies = []
 def create_entry(dict, url):
+    if dict["Cookiename"] in existing_cookies:
+        return 0
     cookie_url = "https://cookiepedia.co.uk/cookies/" + dict["Cookiename"]
     dict["Cookie URL"] = cookie_url
     dict["URL"] = url
@@ -52,17 +54,12 @@ def create_entry(dict, url):
         dict["Purpose"] = "Targeting/Advertising"
     about_cookies = get_description(cookie_url)
     host_name = get_hostname(about_cookies)
-    if dict["Cookiename"]=="_mcid" and (dict["Is Secure"] == "No" or dict["Is HTTP Only"]=="No"):
-        pass
-    elif dict["Cookiename"]=="QA" and (dict["Is Secure"] == "No" and dict["Is HTTP Only"]=="No"):
-        pass
 
-    else:
-        writer.writerow([url, dict["Cookiename"],host_name, dict["Purpose"], about_cookies, cookie_url,dict["Is Secure"],dict["Is HTTP Only"],dict["Path"]])
+    writer.writerow([url, dict["Cookiename"],host_name, dict["Purpose"], about_cookies, cookie_url,dict["Is Secure"],dict["Is HTTP Only"],dict["Path"]])
+    existing_cookies.append(dict["Cookiename"])
 
-        My_dictionary = {"Url":url,"Cookie Name":dict["Cookiename"],"Host Name":host_name,"Purpose":dict["Purpose"],"Description":about_cookies,"Cookie URL": cookie_url,"Is Secure":dict["Is Secure"],"Is HTTP Only":dict["Is HTTP Only"],"Path":dict["Path"]}
-        raw_output.append((My_dictionary))
-
+    My_dictionary = {"Url":url,"Cookie Name":dict["Cookiename"],"Host Name":host_name,"Purpose":dict["Purpose"],"Description":about_cookies,"Cookie URL": cookie_url,"Is Secure":dict["Is Secure"],"Is HTTP Only":dict["Is HTTP Only"],"Path":dict["Path"]}
+    raw_output.append((My_dictionary))
 
 def req(url):
     header = {
@@ -112,17 +109,14 @@ data2 = req(url2)
 with open("sample.csv", "w", newline="") as file:
     writer = csv.writer(file)
     writer.writerow(["Website URL", "Cookie Names","Host", "Purpose", "Description", "Cookie URL","Is Secure","Is HTTP only?","Path"])
-    writer.writerow([" ", " ", " ", " ", " "])
+
     for entries in data1:
         entries = list(entries.split(","))
         dict1 = {entries[i]: entries[i + 1] for i in range(0, len(entries) - 1, 2)}
-        print(dict1)
+
         create_entry(dict1, url1)
     for entries in data2:
         entries = entries.replace(",Cookie","Cookie")
         entries = list(entries.split(","))
         dict2 = {entries[i]: entries[i + 1] for i in range(0, len(entries), 2)}
         create_entry(dict2, url2)
-
-print(raw_output)
-print(len(raw_output))
