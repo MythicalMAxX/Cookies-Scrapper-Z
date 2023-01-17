@@ -120,7 +120,7 @@ links = ['d1447tq2m68ekg.cloudfront.net', 'd191y0yd6d0jy4.cloudfront.net', 'd1l6
 
 url1 = "https://cookiepedia.co.uk/host/"
 
-with open("cookies.csv", "w", newline="") as file:
+with open("cookies.csv", "a", newline="") as file:
     writer = csv.writer(file)
     # writer.writerow(["Website URL", "Cookie Names","Domain","Host", "Purpose", "Description", "Cookie URL","Is Secure","Is HTTP only?","Path"])
 
